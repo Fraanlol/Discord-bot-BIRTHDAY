@@ -3,6 +3,8 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS] });
 const fs = require('fs');
+const cron = require('node-cron');
+const dateForm = require('date-fns');
 
 // Command Handler
 
@@ -27,4 +29,49 @@ for (const file of eventFiles) {
 	}
 }
 
+// Database handler
+
+const Sequelize = require('sequelize');
+
+client.databases = new Discord.Collection();
+
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	// SQLite only
+	storage: 'database.sqlite',
+});
+
+const tags = sequelize.define('birthDays', {
+	userId: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	date: Sequelize.STRING,
+	username: Sequelize.STRING,
+});
+
+client.databases.set('sequelize', sequelize);
+client.databases.set('tags', tags);
+
+//CRON TIMER
+
+// cron.schedule('5 * * * * *', () => {
+
+// 	tags.findAll(
+// 		{
+// 			attributes: ['userId'],
+// 			where:{
+// 				date:dateForm.format(new Date(2020,08,06), 'MM/dd')
+// 			}
+// 		}
+// 	).then( (birthBoy) => birthBoy.forEach((key) => {
+// 		client.users.fetch(key.userId).then((retrievedUser) => {
+// 			console.log(retrievedUser);
+// 		})
+// 	}))
+// });
+
 client.login(process.env.bot_token);
+
