@@ -1,7 +1,13 @@
 require('dotenv').config();
 
 const Discord = require('discord.js');
-const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS] });
+const client = new Discord.Client({ 
+	intents: [
+		Discord.Intents.FLAGS.GUILDS,
+		Discord.Intents.FLAGS.GUILD_MESSAGES,
+		Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+		] 
+	});
 const fs = require('fs');
 const cron = require('node-cron');
 const dateForm = require('date-fns');
