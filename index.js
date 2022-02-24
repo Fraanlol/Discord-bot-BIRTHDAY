@@ -49,35 +49,53 @@ const sequelize = new Sequelize('database', 'user', 'password', {
 	storage: 'database.sqlite',
 });
 
-const tags = sequelize.define('birthDays', {
-	userId: {
+const Users = sequelize.define('Users', {
+	userId: Sequelize.STRING,
+	date: Sequelize.STRING,
+	username: Sequelize.STRING,
+	guildId: Sequelize.STRING,
+});
+
+const Guilds = sequelize.define('Guilds', {
+	guildId:{
 		type: Sequelize.STRING,
 		unique: true,
 	},
-	date: Sequelize.STRING,
-	username: Sequelize.STRING,
-});
+	guildChannel: Sequelize.STRING,
+})
 
-client.databases.set('sequelize', sequelize);
-client.databases.set('tags', tags);
+client.databases.set('users', Users);
+client.databases.set('guilds', Guilds)
+
+
+
+client.login(process.env.bot_token);
+
 
 //CRON TIMER
 
-// cron.schedule('5 * * * * *', () => {
+cron.schedule('* 00 * * *', () => {
 
-// 	tags.findAll(
-// 		{
-// 			attributes: ['userId'],
-// 			where:{
-// 				date:dateForm.format(new Date(2020,08,06), 'MM/dd')
-// 			}
-// 		}
-// 	).then( (birthBoy) => birthBoy.forEach((key) => {
-// 		client.users.fetch(key.userId).then((retrievedUser) => {
-// 			console.log(retrievedUser);
-// 		})
-// 	}))
-// });
+		Users.findAll(
+			{
+				attributes: ['userId','guildId'],
+				where:{
+					date:dateForm.format(new Date(2020,08,06), 'MM/dd') // Seis de septiembre
+				}
+			}
+		).then( birthBoy => birthBoy.forEach(async (key) => {
+					Guilds.findOne({
+						attributes: ['guildChannel'],
+						where:{
+							guildId : key.dataValues.guildId,
+						}
+					}).then(response => {
+						client.channels.fetch(response.dataValues.guildChannel).then(channelRes =>{
+							channelRes.send(`Happy Birthday <@${key.dataValues.userId}> !!!!`);
+						})
+					})
+		}))
 
-client.login(process.env.bot_token);
+});
+
 

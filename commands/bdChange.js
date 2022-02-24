@@ -9,7 +9,7 @@ module.exports = {
 									.setRequired(true)
 		),
 	async execute(interaction) {
-        const table = interaction.client.databases.get('tags');
+        const table = interaction.client.databases.get('users');
         const userDate = interaction.options.getString('date');
         const tag = await table.findOne({ where: { userId: interaction.user.id} });
 		const regExpr = /(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/g;

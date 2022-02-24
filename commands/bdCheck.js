@@ -9,16 +9,21 @@ module.exports = {
 									.setRequired(true)
 		),
 	async execute(interaction) {
-        const table = interaction.client.databases.get('tags');
+        const table = interaction.client.databases.get('users');
         const userName = interaction.options.getString('username');
-		
+        
         try{
             table.findOne({ where: { username: userName} }).then(response => {
-                return interaction.reply(`Username: ${response.username}, Birthday: ${response.date}`)
+
+                if(response == null){
+                    return interaction.reply(`User not found`);
+                }else{
+                    return interaction.reply(`Username: ${response.username}, Birthday: ${response.date}`)
+
+                }
             })
         }catch(error){
             console.log(error);
-            interaction.reply("not found");
         }
-    }   
+    }
 }

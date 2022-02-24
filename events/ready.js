@@ -4,6 +4,15 @@ module.exports = {
 	once: true,
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
-		client.databases.get('tags').sync().then(() => console.log('Escritura Realizada')).catch(() => console.error("ERROR al escribir la base de datos"));
+
+		client.databases.each(key => {
+			key.sync()
+			.then(() => {
+				console.log(`Escritura realizada con exito en ${key.name}`);
+			})
+			.catch(() => {
+				console.error(`Error al escribir en ${key.name}`);
+			})
+		})
 	},
 };
