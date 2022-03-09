@@ -68,34 +68,39 @@ client.databases.set('users', Users);
 client.databases.set('guilds', Guilds)
 
 
-
-client.login(process.env.bot_token);
-
-
 //CRON TIMER
 
 cron.schedule('* 00 * * *', () => {
 
-		Users.findAll(
-			{
-				attributes: ['userId','guildId'],
-				where:{
-					date:dateForm.format(new Date(2020,08,06), 'MM/dd') // Seis de septiembre
-				}
+	//FIRST FIND BIRTHDAY USERS.
+	Users.findAll(
+		{
+			attributes: ['userId','guildId'],
+			where:{
+				date:dateForm.format(new Date(), 'MM/dd') 
 			}
-		).then( birthBoy => birthBoy.forEach(async (key) => {
-					Guilds.findOne({
-						attributes: ['guildChannel'],
-						where:{
-							guildId : key.dataValues.guildId,
-						}
-					}).then(response => {
-						client.channels.fetch(response.dataValues.guildChannel).then(channelRes =>{
-							channelRes.send(`Happy Birthday <@${key.dataValues.userId}> !!!!`);
-						})
+		}
+		//ONCE FOUND, LOOK FOR GUILD CHANNEL TO SEND MESSAGE.
+	).then( birthBoy => birthBoy.forEach(async (key) => {
+				Guilds.findOne({
+					attributes: ['guildChannel'],
+					where:{
+						guildId : key.dataValues.guildId,
+					}
+				}).then(response => {
+					client.channels.fetch(response.dataValues.guildChannel).then(channelRes =>{
+						channelRes.send(`<@everyone today is <@${key.dataValues.userId}> birthday!!!!`);
 					})
-		}))
-
+				})
+	}))
 });
+
+
+
+
+
+client.login(process.env.bot_token);
+
+
 
 
