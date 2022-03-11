@@ -7,7 +7,6 @@ module.exports = {
         .setDescription('Set bot parameters for your server!'),
 
     async execute(interaction) {
-
         //Load embed an table, then send the embed an reactions.
         const embedMessage = testing.getEmbed('config',interaction.guild);
         const table = interaction.client.databases.get('guilds');
@@ -79,7 +78,7 @@ module.exports = {
                 }
             }
         })
-        
+
         collector.on('end', mess => {
             message.channel.send('Time has ran out, please insert command again.')
         })

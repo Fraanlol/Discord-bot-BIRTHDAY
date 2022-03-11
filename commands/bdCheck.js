@@ -11,14 +11,13 @@ module.exports = {
 	async execute(interaction) {
         const table = interaction.client.databases.get('users');
         const userName = interaction.options.getString('username');
-        
+
         try{
             table.findOne({ where: { username: userName, guildId : interaction.guild.id} }).then(response => {
                 if(response == null){
                     return interaction.reply(`User not found`);
                 }else{
-                    return interaction.reply(`Username: ${response.username}, Birthday: ${response.date}`)
-
+                    return interaction.reply(`Username: ${response.username}, Birthday: ${response.date}`);
                 }
             })
         }catch(error){

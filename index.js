@@ -1,12 +1,12 @@
 require('dotenv').config();
 
 const Discord = require('discord.js');
-const client = new Discord.Client({ 
+const client = new Discord.Client({
 	intents: [
 		Discord.Intents.FLAGS.GUILDS,
 		Discord.Intents.FLAGS.GUILD_MESSAGES,
-		Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS
-		] 
+		Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+		],
 	});
 const fs = require('fs');
 const cron = require('node-cron');
@@ -70,14 +70,13 @@ client.databases.set('guilds', Guilds)
 
 //CRON TIMER
 
-cron.schedule('0 * * * * *', () => {
-
+cron.schedule('* * * * *', () => {
 	//FIRST FIND BIRTHDAY USERS.
 	Users.findAll(
 		{
 			attributes: ['userId','guildId'],
 			where:{
-				date:dateForm.format(new Date(), 'MM/dd') 
+				date:dateForm.format(new Date(), 'MM/dd'),
 			}
 		}
 		//ONCE FOUND, LOOK FOR GUILD CHANNEL TO SEND MESSAGE.
