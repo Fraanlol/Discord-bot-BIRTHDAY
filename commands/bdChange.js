@@ -16,7 +16,7 @@ module.exports = {
 
         if(userDate.match(regExpr)){
             if (tag) {
-                await table.update({ date: userDate }, { where: { userId: interaction.user.id} });
+                await table.update({ date: userDate }, { where: { userId: interaction.user.id, guildId:interaction.guild.id} });
                 interaction.reply(`${interaction.user.username} your date was edited!!`);
             }else{
                  interaction.reply(`Could not find tag: ${tagName}`);

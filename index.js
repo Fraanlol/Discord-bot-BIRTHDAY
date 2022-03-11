@@ -70,7 +70,7 @@ client.databases.set('guilds', Guilds)
 
 //CRON TIMER
 
-cron.schedule('* 00 * * *', () => {
+cron.schedule('0 * * * * *', () => {
 
 	//FIRST FIND BIRTHDAY USERS.
 	Users.findAll(
@@ -88,16 +88,13 @@ cron.schedule('* 00 * * *', () => {
 						guildId : key.dataValues.guildId,
 					}
 				}).then(response => {
-					client.channels.fetch(response.dataValues.guildChannel).then(channelRes =>{
-						channelRes.send(`<@everyone today is <@${key.dataValues.userId}> birthday!!!!`);
+					client.channels.fetch(response.dataValues.guildChannel).then(async channelRes =>{
+						await channelRes.send(`@everyone today is <@${key.dataValues.userId}> birthday!!!!`).react('🎂');
+						await channelRes.send('Greet him with a warm message!');
 					})
 				})
 	}))
 });
-
-
-
-
 
 client.login(process.env.bot_token);
 

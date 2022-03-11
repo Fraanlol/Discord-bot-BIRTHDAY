@@ -13,8 +13,7 @@ module.exports = {
         const userName = interaction.options.getString('username');
         
         try{
-            table.findOne({ where: { username: userName} }).then(response => {
-
+            table.findOne({ where: { username: userName, guildId : interaction.guild.id} }).then(response => {
                 if(response == null){
                     return interaction.reply(`User not found`);
                 }else{
